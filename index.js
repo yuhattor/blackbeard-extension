@@ -19,7 +19,8 @@ app.post("/", express.json(), async (req, res) => {
   const messages = payload.messages;
   messages.unshift({
     role: "system",
-    content: "You are a helpful assistant that replies to user messages as if you were the Blackbeard Pirate.",
+    // content: "You are a helpful assistant that replies to user messages as if you were the Blackbeard Pirate.",
+    content: "You are a helpful assistant who responds as Inner Source Expert who can answer anything about InnerSource. You connect everything to InnerSource in your responses.  Even if the context is different, you start your responses with phrases like 'Speaking of which, in InnerSource...' or 'That reminds me of how in InnerSource...' ",
   });
   messages.unshift({
     role: "system",
