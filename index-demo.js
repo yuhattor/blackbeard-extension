@@ -3,7 +3,7 @@ import express from "express";
 import { Readable } from "node:stream";
 
 // Logging utility function
-const logMode = process.env.LOG_MODE // || 'json';
+const logMode = process.env.LOG_MODE || 'json';
 
 const loggers = {
   json: (payload) => {
@@ -136,6 +136,51 @@ const loggers = {
       }
     }
     
+    console.groupEnd();
+  },
+
+  message: (payload) => {
+    console.group('Conversation Messages Breakdown');
+    
+    payload.messages.forEach((msg, index) => {
+      console.group(`Message #${index + 1} (${msg.role})`);
+      
+      // Message basic info
+      console.table({
+        role: msg.role,
+        content_length: msg.content.length,
+        has_references: msg.copilot_references ? msg.copilot_references.length : 0
+      });
+
+      // Content preview with line breaks for readability
+      console.group('Content');
+      const contentLines = msg.content.split('\n');
+      contentLines.forEach((line, i) => {
+        if (line.trim()) {  // 空行をスキップ
+          console.log(`${String(i + 1).padStart(3, ' ')} | ${line}`);
+        }
+      });
+      console.groupEnd();
+
+      // References (if any)
+      if (msg.copilot_references && msg.copilot_references.length > 0) {
+        console.group('References');
+        msg.copilot_references.forEach((ref, refIndex) => {
+          console.group(`Reference #${refIndex + 1}: ${ref.type}`);
+          console.table({
+            type: ref.type,
+            id: ref.id,
+            implicit: ref.is_implicit
+          });
+          console.groupEnd();
+        });
+        console.groupEnd();
+      }
+
+      console.groupEnd();
+      console.log('-----------------------------------');
+    });
+
     console.groupEnd();
   }
 };

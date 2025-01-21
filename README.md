@@ -8,6 +8,16 @@ Blackbeard is a basic example of an agent-based GitHub Copilot Extension. It res
 > All enrolled users with a GitHub Copilot Individual subscription can use Copilot Extensions.
 > For organizations and enterprises with a Copilot Business or Copilot Enterprise subscription, organization owners and enterprise administrators can grant access to Copilot Extensions for use within their company.
 
+## Demo
+
+```bash
+LOG_MODE='json' node index-demo.js 
+LOG_MODE='overview' node index-demo.js 
+LOG_MODE='conversation' node index-demo.js 
+LOG_MODE='message' node index-demo.js 
+LOG_MODE='file' node index-demo.js 
+```
+
 ## Development
 
 Install dependencies:
