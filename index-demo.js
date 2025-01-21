@@ -3,7 +3,7 @@ import express from "express";
 import { Readable } from "node:stream";
 
 // Logging utility function
-const logMode = process.env.LOG_MODE || 'json';
+const logMode = process.env.LOG_MODE // || 'json';
 
 const loggers = {
   json: (payload) => {
@@ -14,12 +14,39 @@ const loggers = {
     console.group('Request Overview');
     console.log('Thread ID:', payload.copilot_thread_id);
     console.log('Agent:', payload.agent);
+    
+    // Basic parameters
+    console.group('Parameters');
     console.table({
       temperature: payload.temperature,
       top_p: payload.top_p,
       max_tokens: payload.max_tokens,
       message_count: payload.messages.length
     });
+    console.groupEnd();
+
+    // Conversation summary
+    console.group('Conversation History');
+    console.table(payload.messages.map((msg, index) => ({
+      index,
+      role: msg.role,
+      content_length: msg.content.length,
+      has_references: msg.copilot_references ? msg.copilot_references.length : 0
+    })));
+    console.groupEnd();
+
+    // Reference types summary (if any exists in the last message)
+    const lastMessage = payload.messages[payload.messages.length - 1];
+    if (lastMessage.copilot_references && lastMessage.copilot_references.length > 0) {
+      console.group('Last Message References Summary');
+      const refTypes = lastMessage.copilot_references.reduce((acc, ref) => {
+        acc[ref.type] = (acc[ref.type] || 0) + 1;
+        return acc;
+      }, {});
+      console.table(refTypes);
+      console.groupEnd();
+    }
+
     console.groupEnd();
   },
 
