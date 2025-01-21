@@ -3,6 +3,7 @@
   "private": "true",
   "description": "A basic example of a Copilot Extension",
   "scripts": {
+    "start-demo": "node index-demo.js",
     "start": "node index.js",
     "dev": "node --watch index.js"
   },
